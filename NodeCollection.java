@@ -75,6 +75,7 @@ class NodeCollection {
         // find node by id
         // remove it from this.nodes
         // TODO: Use a better search algorithm (this.searchFast) for competency 0.0f
+        // TODO: Move this search algorithm into its own method (slow search)
 
         Node localnode = null;
 
