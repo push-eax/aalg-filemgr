@@ -12,10 +12,14 @@ Commands and their usage:
 - "add ID NAME" adds a node to the NodeCollection.
 - "delete ID" removes a node from the NodeCollection.
 - "list" displays the nodes contained in the NodeCollection as well as their IDs and names.
+- "sorts" sorts the NodeCollection in place using a bubble sort and reports performance.
+- "sortf" sorts the NodeCollection using a merge sort and reports performance.
 - "flush" serializes the ArrayList contained within NodeCollection and writes it to the file indicated with the "init" command. 
 - "exit" exits the program.
 
 The NodeCollection is kept in memory unless explicitly flushed to disk. If the user exits without flushing, any nodes added will be lost.
+
+Performance data can be found in the data/ directory.
 
 To compile:
 
