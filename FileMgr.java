@@ -36,7 +36,7 @@ public class FileMgr {
                     String[] commArr = rawInput.split(" ");
                     String command = commArr[0];
 
-                    String commands[] = {"add", "delete", "list", "flush", "init"};
+                    String commands[] = {"add", "delete", "list", "flush", "init", "searchf", "searchs", "sortf", "sorts"};
                     if (command.equals("exit")) {
                         // exit the program
                         return;
@@ -78,6 +78,16 @@ public class FileMgr {
                                 collection = new NodeCollection(commArr[1]);
                                 collection.readNodes();
                                 System.out.println("New " + collection + " using file \"" + commArr[1] + "\""); 
+                                break;
+                            case 5: // search fast
+                                break;
+                            case 6: // search slow
+                                break;
+                            case 7: // sort fast
+                                System.out.println("Sorted " + collection + " in " + Double.toString(collection.sortFast()) + " seconds");
+                                break;
+                            case 8: // sort slow
+                                System.out.println("Sorted " + collection + " in " + Double.toString(collection.sortSlow()) + " seconds");
                                 break;
                             default:
                                 break;

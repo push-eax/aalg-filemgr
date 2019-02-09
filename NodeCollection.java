@@ -24,7 +24,7 @@ class NodeCollection {
         if (this.file.length() == 0) {
             return;
         }
-    
+
         try {
             FileInputStream fin = new FileInputStream(this.file);
             ObjectInputStream in = new ObjectInputStream(fin);
@@ -78,7 +78,7 @@ class NodeCollection {
 
         Node localnode = null;
 
-        for (int i = 0; i < nodes.size(); i++) {
+        for (int i = 0; i < this.getSize(); i++) {
             if (nodes.get(i).id == id) {
                 localnode = nodes.get(i);
                 nodes.remove(i);
@@ -87,7 +87,91 @@ class NodeCollection {
 
         return localnode;
     }
+
+    // sorting methods
+    // these return performance in seconds, to nanosecond precision
+    // there is no greater precision available in Java
+
+    // bubble sort
+    public double sortSlow() {
+        // start the timer
+        long startTime = System.nanoTime();
+
+        int n = this.getSize();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                    if (nodes.get(j).id > nodes.get(j + 1).id) {
+                        Collections.swap(nodes, j, j + 1);
+                    }
+            }
+        }
+
+        // stop the timer
+        long endTime = System.nanoTime();
+        // return elapsed
+        return (double)(endTime - startTime) / 1e9;
+    }
+
+    // mergesort
+    public double sortFast() {
+        // start the timer
+        long startTime = System.nanoTime();
+        
+        this.divide(0, this.getSize() - 1);
+
+        // stop the timer
+        long endTime = System.nanoTime();
+        // return elapsed
+        return (double)(endTime - startTime) / 1e9;
+    }
+
+    // private method for mergesort
+    private void divide(int startIndex, int endIndex) {
+
+        if (startIndex < endIndex && (endIndex - startIndex) >= 1) {
+            int mid = (endIndex + startIndex) / 2;
+            this.divide(startIndex, mid);
+            this.divide(mid + 1, endIndex);
+
+            this.merger(startIndex, mid, endIndex);
+        }
+    }
     
+    // private method for mergesort
+    private void merger(int startIndex, int midIndex, int endIndex) {
+        ArrayList<Node> mergedSortedArray = new ArrayList<Node>();
+
+        int leftIndex = startIndex;
+        int rightIndex = midIndex + 1;
+
+        while (leftIndex <= midIndex && rightIndex <= endIndex) {
+            if (this.nodes.get(leftIndex).id <= this.nodes.get(rightIndex).id) {
+                mergedSortedArray.add(this.nodes.get(leftIndex));
+                leftIndex++;
+            } else {
+                mergedSortedArray.add(this.nodes.get(rightIndex));
+                rightIndex++;
+            }
+        }
+
+        while (leftIndex <= midIndex) {
+            mergedSortedArray.add(this.nodes.get(leftIndex));
+            leftIndex++;
+        }
+
+        while (rightIndex <= endIndex) {
+            mergedSortedArray.add(this.nodes.get(rightIndex));
+            rightIndex++;
+        }
+
+        int i = 0;
+        int j = startIndex;
+        while(i < mergedSortedArray.size()){
+            this.nodes.set(j, mergedSortedArray.get(i++));
+            j++;
+        }
+    }
+
     // get the size of the ArrayList. the ArrayList is private, so we need to use a getter
     public int getSize() {
         return nodes.size();
