@@ -6,11 +6,14 @@ class NodeCollection {
     private ArrayList<Node> nodes;
     // handle to the file which stores the serialized ArrayList
     public File file;
+    // stores the runtime of the last run sort or search function
+    public double runtime;
 
     // constructor
     public NodeCollection(String file) { 
         this.nodes = new ArrayList<Node>();
         this.file = new File(file);
+        this.runtime = 0;
         try {
             this.file.createNewFile();
         } catch (IOException i) {
@@ -72,30 +75,81 @@ class NodeCollection {
 
     // delete a node from the collection
     public Node delNode(int id) {
-        // find node by id
-        // remove it from this.nodes
-        // TODO: Use a better search algorithm (this.searchFast) for competency 0.0f
-        // TODO: Move this search algorithm into its own method (slow search)
-
-        Node localnode = null;
-
-        for (int i = 0; i < this.getSize(); i++) {
-            if (nodes.get(i).id == id) {
-                localnode = nodes.get(i);
-                nodes.remove(i);
-            }
-        }
+        Node localnode = this.searchSlow(id);
+ 
+        this.nodes.remove(localnode);
 
         return localnode;
     }
 
-    // sorting methods
+    // sorting and searching methods
     // these return performance in seconds, to nanosecond precision
     // there is no greater precision available in Java
 
-    // bubble sort
-    public double sortSlow() {
+    // linear search
+    public Node searchSlow(int id) {
         // start the timer
+        long startTime = System.nanoTime();
+        
+        for (int i = 0; i < this.getSize(); i++) {
+            if (this.nodes.get(i).id == id) {
+                // stop the timer
+                long endTime = System.nanoTime();
+                // set runtime to elapsed
+                this.runtime = (double)(endTime - startTime) / 1e9;
+                return this.nodes.get(i);
+            }
+        }
+
+        long endTime = System.nanoTime();
+        this.runtime = (double)(endTime - startTime) / 1e9;
+        return null;
+    }
+
+    // fast search
+    public Node searchFast(int id) {
+        long startTime = System.nanoTime();
+        
+        // sort before we search
+        this.sortFast();
+        Node[] nodeArray = this.nodes.toArray(new Node[this.getSize()]);
+
+        int index = this.binarySearch(nodeArray, 0, this.getSize() - 1, id);
+
+        long endTime = System.nanoTime();
+        this.runtime = (double)(endTime - startTime) / 1e9; 
+       
+        Node retNode;
+
+        try {
+            retNode = this.nodes.get(index);
+        } catch (Exception e) {
+            return null;
+        }
+        return retNode;
+    }
+
+    private int binarySearch(Node arr[], int l, int r, int x) {
+        if (r >= l) {
+            int mid = l + (r - l) / 2;
+
+            if (arr[mid].id == x) {
+                return mid;
+            }
+
+            if (arr[mid].id > x) {
+                return this.binarySearch(arr, l, mid - 1, x);
+            }
+
+            return this.binarySearch(arr, mid + 1, r, x);
+        }
+
+        return -1;
+    }
+
+
+    // bubble sort
+    public void sortSlow() {
         long startTime = System.nanoTime();
 
         int n = this.getSize();
@@ -107,23 +161,18 @@ class NodeCollection {
             }
         }
 
-        // stop the timer
         long endTime = System.nanoTime();
-        // return elapsed
-        return (double)(endTime - startTime) / 1e9;
+        this.runtime = (double)(endTime - startTime) / 1e9;
     }
 
     // mergesort
-    public double sortFast() {
-        // start the timer
+    public void sortFast() {
         long startTime = System.nanoTime();
         
         this.divide(0, this.getSize() - 1);
 
-        // stop the timer
         long endTime = System.nanoTime();
-        // return elapsed
-        return (double)(endTime - startTime) / 1e9;
+        this.runtime = (double)(endTime - startTime) / 1e9;
     }
 
     // private method for mergesort

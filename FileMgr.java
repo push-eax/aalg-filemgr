@@ -80,14 +80,42 @@ public class FileMgr {
                                 System.out.println("New " + collection + " using file \"" + commArr[1] + "\""); 
                                 break;
                             case 5: // search fast
+                                Node result_fast = collection.searchFast(Integer.parseInt(commArr[1]));
+                                System.out.println("Searched " + collection + " in " + Double.toString(collection.runtime) + " seconds");
+                                if (result_fast == null) {
+                                    System.out.println("Node " + commArr[1] + " not found.");
+                                } else {
+                                    System.out.println("{");
+                                    System.out.println("\t{");
+                                    System.out.println("\t\t\"id\": " + Integer.toString(result_fast.id));
+                                    System.out.println("\t\t\"name\": \"" + result_fast.name + "\"");
+                                    System.out.println("\t}");
+                                    System.out.println("}");
+                                }
                                 break;
                             case 6: // search slow
+                                // It seems that Java does not respect scope within switch:case statements.
+                                // I couldn't declare variables with the same name in two case statements without throwing compiler errors.
+                                Node result_slow = collection.searchSlow(Integer.parseInt(commArr[1]));
+                                System.out.println("Searched " + collection + " in " + Double.toString(collection.runtime) + " seconds");
+                                if (result_slow == null) {
+                                    System.out.println("Node " + commArr[1] + " not found.");
+                                } else {
+                                    System.out.println("{");
+                                    System.out.println("\t{");
+                                    System.out.println("\t\t\"id\": " + Integer.toString(result_slow.id));
+                                    System.out.println("\t\t\"name\": \"" + result_slow.name + "\"");
+                                    System.out.println("\t}");
+                                    System.out.println("}");
+                                }
                                 break;
                             case 7: // sort fast
-                                System.out.println("Sorted " + collection + " in " + Double.toString(collection.sortFast()) + " seconds");
+                                collection.sortFast();
+                                System.out.println("Sorted " + collection + " in " + Double.toString(collection.runtime) + " seconds");
                                 break;
                             case 8: // sort slow
-                                System.out.println("Sorted " + collection + " in " + Double.toString(collection.sortSlow()) + " seconds");
+                                collection.sortSlow();
+                                System.out.println("Sorted " + collection + " in " + Double.toString(collection.runtime) + " seconds");
                                 break;
                             default:
                                 break;

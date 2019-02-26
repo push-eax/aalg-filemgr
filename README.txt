@@ -12,6 +12,8 @@ Commands and their usage:
 - "add ID NAME" adds a node to the NodeCollection.
 - "delete ID" removes a node from the NodeCollection.
 - "list" displays the nodes contained in the NodeCollection as well as their IDs and names.
+- "searchs ID" searches for a node by ID using a linear search and reports performance.
+- "searchf ID" searches for a node by ID using a binary search and reports performance. This command sorts the NodeCollection before searching.
 - "sorts" sorts the NodeCollection in place using a bubble sort and reports performance.
 - "sortf" sorts the NodeCollection using a merge sort and reports performance.
 - "flush" serializes the ArrayList contained within NodeCollection and writes it to the file indicated with the "init" command. 
